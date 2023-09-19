@@ -9,6 +9,7 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      <home-manager/nixos> 
     ];
   
   ## System Settings
@@ -169,10 +170,12 @@
       vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
       wget
       busybox
+      toybox
       home-manager
       git
       fish
       fishPlugins.tide
+      coreutils-full
       zsh
       unzip
       jq
@@ -189,6 +192,7 @@
       lua
       pipx
       groovy
+      nmap
       # python
       # python.pkgs.pip
       vscode
@@ -240,9 +244,9 @@
       })
     ];
     variables = { 
-      EDITOR = "nvim";
+      EDITOR = "code";
       SHELL = "/run/current-system/sw/bin/fish";
-      SUDO_EDITOR = "nvim";
+      SUDO_EDITOR = "code";
       VISUAL = "code";
       BROWSER = "librewolf";
       TERMINAL = "wezterm";
@@ -281,6 +285,8 @@
 
   ## Program Specific Settings
   programs = {
+    dconf.enable = true;
+    fish.enable = true;
     gnupg.agent = {
       enable = true;
       enableSSHSupport = true;
@@ -290,7 +296,6 @@
       remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
       dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
     };
-    dconf.enable = true;
   };
 
   ## Virtualization and Containerzation
