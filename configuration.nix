@@ -94,6 +94,10 @@
   ## Kernel.
   boot = {
     kernelPackages = pkgs.linuxPackages_latest;
+    extraModprobeConfig = ''
+      options snd slots=snd_hda_codec_realtek
+      options snd_hda_intel enable=0,1
+    '';
     loader = {
       timeout = 10;
       systemd-boot.enable = true;
@@ -350,6 +354,8 @@
         unitConfig.RequiresMountsFor = "/sys";
         script = ''
           echo -1 > /sys/module/usbcore/parameters/autosuspend
+          echo Y > /sys/module/usbcore/parameters/old_scheme_first
+          echo Y > /sys/module/usbcore/parameters/use_both_schemes
         '';
       };
     };
