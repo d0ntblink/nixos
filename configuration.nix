@@ -146,7 +146,6 @@
         gimp
         # davinci-resolve
         libreoffice
-        homebank
         qbittorrent
         ungoogled-chromium
         onedrive
@@ -172,6 +171,7 @@
       busybox
       toybox
       home-manager
+      appimage-run
       git
       fish
       fishPlugins.tide
