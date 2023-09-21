@@ -173,6 +173,7 @@
       home-manager
       appimage-run
       git
+      hplip
       fish
       fishPlugins.tide
       coreutils-full
