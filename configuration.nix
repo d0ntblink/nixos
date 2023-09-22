@@ -348,6 +348,19 @@
       pulse.enable = true;
       jack.enable = true;
     };
+    logind = {
+      # overrideStrategy = "asDropin";
+      lidSwitch = "suspend-then-hibernate";
+      lidSwitchDocked = "ignore";
+      lidSwitchExternalPower = "ignore";
+      killUserProcesses = true;
+      extraConfig = ''
+        HandlePowerKey=poweroff
+        HandlePowerKeyLongPress=reboot
+        IdleActionSec=15min
+        IdleAction=lock
+      '';
+    };
   };
 
   ## Systemd
