@@ -9,6 +9,7 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      <home-manager/nixos> 
     ];
   
   ## System Settings
@@ -288,7 +289,6 @@
   programs = {
     dconf.enable = true;
     fish.enable = true;
-    home-manager.enable = true;
     gnupg.agent = {
       enable = true;
       enableSSHSupport = true;
