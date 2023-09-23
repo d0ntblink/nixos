@@ -128,7 +128,7 @@
       isNormalUser = true;
       home = "/home/d0ntblink";
       description = "d0ntblink";
-      extraGroups = [ "wheel" "kvm" "input" "disk" "libvirtd" "vboxusers"];
+      extraGroups = [ "wheel" "kvm" "input" "disk" "libvirtd" "vboxusers" "tss"];
       packages = with pkgs; [
         librewolf
         qutebrowser
@@ -204,6 +204,7 @@
       powershell
       virt-manager
       virtualbox
+      swtpm
       libverto
       mpv
       neovim
@@ -383,10 +384,14 @@
   # Enable sound with pipewire.
   sound.enable = true;
 
-  security.rtkit.enable = true;
+  security = {
+    rtkit.enable = true;
+    # tpm2.enable = true;
+    # tpm2.pkcs11.enable = true;  # expose /run/current-system/sw/lib/libtpm2_pkcs11.so
+    # tpm2.tctiEnvironment.enable = true;  # TPM2TOOLS_TCTI and TPM2_PKCS11_TCTI env variables
+  };
   xdg.portal = {
     enable = true;
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
   };
-
 }
