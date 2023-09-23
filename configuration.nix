@@ -289,6 +289,7 @@
   programs = {
     dconf.enable = true;
     fish.enable = true;
+    home-manager.enable = true;
     gnupg.agent = {
       enable = true;
       enableSSHSupport = true;
