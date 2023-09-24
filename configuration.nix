@@ -165,6 +165,7 @@
 
   ## System Environments
   environment = {
+    pathsToLink = [ "/libexec" ];
     systemPackages = with pkgs; [
       vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
       wget
@@ -176,6 +177,9 @@
       hplip
       fish
       fishPlugins.tide
+      powerline-go
+      direnv
+      indicator-application-gtk3
       coreutils-full
       zsh
       unzip
@@ -337,7 +341,10 @@
     xserver = {
       enable = true;
       autorun = true;
-      desktopManager.pantheon.enable = true;
+      desktopManager.pantheon = {
+        enable = true;
+        extraWingpanelIndicators = with pkgs; [ monitor wingpanel-indicator-ayatana];
+      };
       displayManager.lightdm.enable = true;
       layout = "us";
       xkbVariant = "";
