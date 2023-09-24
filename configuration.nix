@@ -188,12 +188,12 @@
       docker
       tshark
       wireshark
-      python3
       ruby
       lua
       pipx
       groovy
       nmap
+      (python3.withPackages(ps: with ps; [requests matplotlib]))
       # python
       # python.pkgs.pip
       vscode
@@ -289,6 +289,10 @@
   programs = {
     dconf.enable = true;
     fish.enable = true;
+    kdeconnect = {
+      enable = true;
+      package = pkgs.plasma5Packages.kdeconnect-kde;
+    };
     gnupg.agent = {
       enable = true;
       enableSSHSupport = true;
