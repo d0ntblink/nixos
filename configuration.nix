@@ -98,6 +98,7 @@
     extraModprobeConfig = ''
       options snd slots=snd_hda_codec_realtek
       options snd_hda_intel enable=0,1
+      options kvm_intel nested=1
     '';
     loader = {
       timeout = 10;
@@ -166,6 +167,14 @@
   ## System Environments
   environment = {
     pathsToLink = [ "/libexec" ];
+    etc = {
+      "ovmf/edk2-x86_64-secure-code.fd" = {
+        source = config.virtualisation.libvirtd.qemu.package + "/share/qemu/edk2-x86_64-secure-code.fd";
+      };
+      "ovmf/edk2-i386-vars.fd" = {
+        source = config.virtualisation.libvirtd.qemu.package + "/share/qemu/edk2-i386-vars.fd";
+      };
+    };
     systemPackages = with pkgs; [
       vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
       wget
@@ -207,9 +216,18 @@
       kitty
       powershell
       virt-manager
+      virt-viewer
+      spice
+      spice-gtk
+      spice-protocol
+      phodav
+      win-virtio
+      win-spice
       virtualbox
       swtpm
       libverto
+      libguestfs
+      guestfs-tools
       mpv
       neovim
       neofetch
@@ -313,7 +331,18 @@
     docker.enable = true;
     podman.enable = false;
     waydroid.enable = true;
-    libvirtd.enable = true;
+    spiceUSBRedirection.enable = true;
+    libvirtd = {
+      enable = true;
+      onShutdown = "shutdown";
+      onBoot = "ignore";
+      qemu = {
+        package = pkgs.qemu_kvm;
+        swtpm.enable = true;
+        ovmf.enable = true;
+        ovmf.packages = [ pkgs.OVMFFull.fd ];
+      };
+    };
     virtualbox = {
       host = {
         enable = true;
@@ -328,6 +357,11 @@
     dbus.enable = true;
     openssh.enable = true;
     cron.enable = true;
+    spice-vdagentd.enable = true;
+    spice-webdavd = {
+      enable = true;
+      package = pkgs.phodav;
+    };
     printing = {
       enable = true;
       drivers = with pkgs; [ gutenprint hplipWithPlugin ];
@@ -397,9 +431,12 @@
 
   security = {
     rtkit.enable = true;
-    # tpm2.enable = true;
-    # tpm2.pkcs11.enable = true;  # expose /run/current-system/sw/lib/libtpm2_pkcs11.so
-    # tpm2.tctiEnvironment.enable = true;  # TPM2TOOLS_TCTI and TPM2_PKCS11_TCTI env variables
+    lockKernelModules = false;
+    tpm2 = {
+      enable = true;
+      pkcs11.enable = true;
+      tctiEnvironment.enable = true;
+    };
   };
   xdg.portal = {
     enable = true;
