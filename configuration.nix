@@ -15,9 +15,13 @@
   ## System Settings
   system = {
     copySystemConfiguration = true;
-    autoUpgrade.enable = true;
-    autoUpgrade.allowReboot = true;
-    autoUpgrade.channel = "https://channels.nixos.org/nixos-23.05";
+    autoUpgrade = {
+      enable = true;
+      persistent = true;
+      allowReboot = true;
+      flags = [];
+      channel = "https://channels.nixos.org/nixos-23.05";
+    };
     # This value determines the NixOS release from which the default
     # settings for stateful data, like file locations and database versions
     # on your system were taken. It‘s perfectly fine and recommended to leave
@@ -75,8 +79,9 @@
     };
     gc = {
       automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 30d";
+      persistent = true;
+      dates = "daily";
+      options = "--delete-older-than 7d";
     };
   };
   
@@ -234,6 +239,11 @@
       flatpak
       flameshot
       gcc
+      gnulib
+      gnutls
+      gnubg
+      gnuchess
+      gnupg
       clang
       mangohud
       nfs-utils
@@ -404,7 +414,7 @@
         HandlePowerKey=poweroff
         HandlePowerKeyLongPress=reboot
         IdleActionSec=15min
-        IdleAction=lock
+        # IdleAction=lock
       '';
     };
   };
