@@ -262,6 +262,7 @@
       xorg.libXinerama
       xorg.xinit
       xorg.xinput
+      xorg.xrefresh
       qemu
       (
         pkgs.writeShellScriptBin "qemu-system-x86_64-uefi" ''
@@ -333,6 +334,23 @@
       enable = true;
       remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
       dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+    };
+
+    chromium = {
+      extensions = with pkgs; [
+        "cjpalhdlnbpafiamejdnhcphjbkeiagm" #
+      ];
+      extraOpts = {
+        "BrowserSignin" = 0;
+        "SyncDisabled" = true;
+        "PasswordManagerEnabled" = false;
+        "SpellcheckEnabled" = true;
+        "SavingBrowserHistoryDisabled" = true;
+        "SpellcheckLanguage" = [
+                                "en-CA"
+                                "en-US"
+        ];
+      };
     };
   };
 
