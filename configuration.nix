@@ -33,8 +33,27 @@
 
   ## Hardware settings (Intel i9-8950HK, NVIDIA Quadro P2000 Mobile)
   hardware = {
-    pulseaudio.support32Bit = true;
-    pulseaudio.enable = false;
+    pulseaudio = {
+      enable = false;
+      support32Bit = true;
+      daemon.config = {
+        default-sample-format = "float32le";
+        default-sample-rate = 48000;
+        alternate-sample-rate = 44100;
+        default-sample-channels = 2;
+        default-channel-map = "front-left,front-right";
+        default-fragments = 2;
+        default-fragment-size-msec = 125;
+        resample-method = "soxr-vhq";
+        enable-lfe-remixing = "no";
+        high-priority = "yes";
+        nice-level = -11;
+        realtime-scheduling = "yes";
+        realtime-priority = 9;
+        rlimit-rtprio = 9;
+        daemonize = "no";
+      };
+    };
     opengl = {
       enable = true;
       driSupport = true;
@@ -138,6 +157,7 @@
       packages = with pkgs; [
         librewolf
         qutebrowser
+        # tor-browser-bundle-bin
         thunderbird
         discord
         signal-desktop
@@ -153,7 +173,9 @@
         # davinci-resolve
         libreoffice
         qbittorrent
-        ungoogled-chromium
+        torrenttools
+        chromium
+        # ungoogled-chromium
         onedrive
         vscode
         tailscale
@@ -165,6 +187,9 @@
         bitwarden-cli
         postman
         telegram-desktop 
+        monero-gui
+        monero-cli
+        xmrig
       ];
     };
   };
@@ -185,10 +210,18 @@
       wget
       busybox
       toybox
+      # tor
+      apparmor-pam
+      apparmor-parser
+      apparmor-profiles
+      apparmor-utils
       home-manager
       appimage-run
       git
       hplip
+      pipecontrol
+      rnnoise-plugin
+      helvum
       fish
       fishPlugins.tide
       powerline-go
@@ -211,7 +244,7 @@
       pipx
       groovy
       nmap
-      (python3.withPackages(ps: with ps; [requests matplotlib]))
+      (python3.withPackages(ps: with ps; [requests matplotlib cryptography]))
       # python
       # python.pkgs.pip
       vscode
@@ -322,6 +355,26 @@
   programs = {
     dconf.enable = true;
     fish.enable = true;
+    firejail = {
+      enable = true;
+      wrappedBinaries = {
+        tor-browser = {
+          executable = "${pkgs.tor-browser-bundle-bin}/bin/tor-browser";
+          profile = "${pkgs.firejail}/etc/firejail/tor-browser_en-US.profile";
+          desktop = "${pkgs.tor-browser-bundle-bin}/share/applications/torbrowser.desktop";
+          extraArgs = [
+            # Enforce dark mode
+            "--env=GTK_THEME=Adwaita:dark"
+            # Enable system notifications
+            "--dbus-user.talk=org.freedesktop.Notifications"
+          ];
+        };
+        tor = {
+          executable = "${pkgs.tor}/bin/tor";
+          profile = "${pkgs.firejail}/etc/firejail/tor.profile";
+        };
+      };
+    };
     kdeconnect = {
       enable = true;
       package = pkgs.plasma5Packages.kdeconnect-kde;
@@ -335,14 +388,33 @@
       remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
       dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
     };
-
     chromium = {
-      extensions = with pkgs; [
-        "cjpalhdlnbpafiamejdnhcphjbkeiagm" #
+      enable = true;
+      homepageLocation = "https://start.duckduckgo.com";
+      defaultSearchProviderEnabled = true;
+      defaultSearchProviderSearchURL = "https://duckduckgo.com/?q={searchTerms}";
+      extensions = [
+        "cjpalhdlnbpafiamejdnhcphjbkeiagm" # uBlock Origin
+        "ahkbmjhfoplmfkpncgoedjgkajkehcgo" # The Great Suspender
+        "pkehgijcmpdhfbdbbnkijodmdjhbjlgp" # Privacy Badger
+
       ];
       extraOpts = {
         "BrowserSignin" = 0;
+        "ExtensionsUIDeveloperMode" = true;
+        "ExtensionAllowPrivateBrowsingByDefault" = true;
+        "ExtensionAllowedTypes" = [
+          "extension"
+          "user_script"
+        ];
+        "BlockThirdPartyCookies" = true;
+        "BlockExternalExtensions" = false;
+        "ExtensionSettings" = {
+          "installation_mode" = "allowed";
+        };
         "SyncDisabled" = true;
+        "SearchSuggestEnabled"  = false;
+        "DefaultBrowserSettingEnabled" = false;
         "PasswordManagerEnabled" = false;
         "SpellcheckEnabled" = true;
         "SavingBrowserHistoryDisabled" = true;
@@ -417,10 +489,13 @@
     };
     pipewire = {
       enable = true;
-      alsa.enable = true;
-      alsa.support32Bit = true;
       pulse.enable = true;
       jack.enable = true;
+      audio.enable = true;
+      alsa = {
+        enable = true;
+        support32Bit = true;
+      };
     };
     logind = {
       # overrideStrategy = "asDropin";
@@ -434,6 +509,9 @@
         IdleActionSec=15min
         # IdleAction=lock
       '';
+    };
+    dbus = {
+      apparmor = "enabled";
     };
   };
 
@@ -459,7 +537,11 @@
 
   security = {
     rtkit.enable = true;
+    chromiumSuidSandbox.enable = true;
     lockKernelModules = false;
+    apparmor = {
+      enable = true;
+    };
     tpm2 = {
       enable = true;
       pkcs11.enable = true;
