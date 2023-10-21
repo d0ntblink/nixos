@@ -19,7 +19,7 @@
       enable = true;
       persistent = true;
       allowReboot = true;
-      flags = [];
+      flags = ["--keep-going" "--upgrade-all"];
       channel = "https://channels.nixos.org/nixos-23.05";
     };
     # This value determines the NixOS release from which the default
@@ -111,6 +111,7 @@
       allowUnfreePredicate = (pkg: builtins.elem (builtins.parseDrvName pkg.name).name [ "steam" ]);
       permittedInsecurePackages = [
         "openssl-1.1.1v"
+        "openssl-1.1.1w"
         "python-2.7.18.6"
       ];
     };
@@ -156,14 +157,16 @@
       extraGroups = [ "wheel" "kvm" "input" "disk" "libvirtd" "vboxusers" "tss"];
       packages = with pkgs; [
         librewolf
+        microsoft-edge-dev
         qutebrowser
-        # tor-browser-bundle-bin
+        notion-app-enhanced
+        bookworm
         thunderbird
         discord
         signal-desktop
         element-desktop
-        plex-media-player
         plexamp
+        plex-media-player
         steam
         gh
         github-desktop
@@ -175,7 +178,6 @@
         qbittorrent
         torrenttools
         chromium
-        # ungoogled-chromium
         onedrive
         vscode
         tailscale
@@ -259,6 +261,10 @@
       spice-gtk
       spice-protocol
       phodav
+      p7zip
+      pax
+      ncompress
+      burpsuite
       win-virtio
       win-spice
       virtualbox
@@ -284,6 +290,7 @@
       rustc
       rustup
       cargo
+      ffmpeg
       ninja
       protonup-ng
       protonup-qt
