@@ -8,7 +8,7 @@
   ## IMPORTS
   imports =
     [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
+      /etc/nixos/hardware-configuration.nix
       <home-manager/nixos> 
     ];
   
@@ -130,6 +130,7 @@
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
+    initrd.luks.devices."luks-34984b05-dc75-4579-97e4-a4e06e1a434c".device = "/dev/disk/by-uuid/34984b05-dc75-4579-97e4-a4e06e1a434c";
   };
 
   ## Network settings
@@ -482,11 +483,9 @@
     xserver = {
       enable = true;
       autorun = true;
-      desktopManager.pantheon = {
-        enable = true;
-        extraWingpanelIndicators = with pkgs; [ monitor wingpanel-indicator-ayatana];
-      };
-      displayManager.lightdm.enable = true;
+      # Enable the GNOME Desktop Environment.
+      displayManager.gdm.enable = true;
+      desktopManager.gnome.enable = true;
       layout = "us";
       xkbVariant = "";
       libinput = {
@@ -555,8 +554,8 @@
       tctiEnvironment.enable = true;
     };
   };
-  xdg.portal = {
-    enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-  };
+#  xdg.portal = {
+#    enable = true;
+#    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+#  };
 }
