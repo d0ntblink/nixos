@@ -54,6 +54,9 @@
         daemonize = "no";
       };
     };
+    # video = {
+    #   hidpi.enable = true;
+    # };
     opengl = {
       enable = true;
       driSupport = true;
@@ -161,7 +164,6 @@
         microsoft-edge-dev
         qutebrowser
         notion-app-enhanced
-        bookworm
         thunderbird
         discord
         signal-desktop
@@ -304,6 +306,16 @@
       xorg.xinit
       xorg.xinput
       xorg.xrefresh
+      gnomeExtensions.appindicator
+      gnomeExtensions.dash-to-dock
+      gnomeExtensions.openweather
+      gnomeExtensions.blur-my-shell
+      gnomeExtensions.vitals
+      gnomeExtensions.burn-my-windows
+      gnome.gnome-tweaks
+      gnome.gnome-weather
+      gnome.eog
+      pantheon.elementary-files
       qemu
       (
         pkgs.writeShellScriptBin "qemu-system-x86_64-uefi" ''
@@ -327,6 +339,8 @@
       BROWSER = "librewolf";
       TERMINAL = "wezterm";
       TERM_PROGRAM = "wezterm";
+      TERM = "wezterm";
+      
     };
   };
 
@@ -405,7 +419,7 @@
         "cjpalhdlnbpafiamejdnhcphjbkeiagm" # uBlock Origin
         "ahkbmjhfoplmfkpncgoedjgkajkehcgo" # The Great Suspender
         "pkehgijcmpdhfbdbbnkijodmdjhbjlgp" # Privacy Badger
-
+        "gphhapmejobijbbhgpjhcjognlahblep" # GNOME Shell integration
       ];
       extraOpts = {
         "BrowserSignin" = 0;
@@ -480,11 +494,22 @@
       enable = true;
       servers = [ "ca.pool.ntp.org" "0.ca.pool.ntp.org" "1.ca.pool.ntp.org" "2.ca.pool.ntp.org" "3.ca.pool.ntp.org" ];
     };
+    gnome = {
+      core-utilities.enable = false;
+    };
     xserver = {
       enable = true;
       autorun = true;
+      excludePackages = with pkgs; [ xterm ];
       # Enable the GNOME Desktop Environment.
-      displayManager.gdm.enable = true;
+      displayManager = {
+        gdm.enable = true;
+        defaultSession = "gnome";
+        # autoLogin = {
+        #   enable = true;
+        #   user = "d0ntblink";
+        # };
+      };
       desktopManager.gnome.enable = true;
       layout = "us";
       xkbVariant = "";
@@ -518,6 +543,10 @@
     };
     dbus = {
       apparmor = "enabled";
+      packages = with pkgs; [ gnome2.GConf ];
+    };
+    udev = {
+      packages = with pkgs; [ gnome.gnome-settings-daemon ];
     };
   };
 
