@@ -109,9 +109,22 @@
   
   ## NixPKGs settings
   nixpkgs = {
+    overlays = [
+      (self: super: {
+        # Add the nix-gaming overlay.
+        nix-gaming = super.nixpkgs.callPackage ./nix-gaming-overlay.nix {};
+      })
+      (final: prev: {
+        steam = prev.steam.override ({ extraPkgs ? pkgs': [], ... }: {
+          extraPkgs = pkgs': (extraPkgs pkgs') ++ (with pkgs'; [
+            libgdiplus
+          ]);
+        });
+      })
+    ];
     config = {
       allowUnfree = true;
-      allowUnfreePredicate = (pkg: builtins.elem (builtins.parseDrvName pkg.name).name [ "steam" ]);
+      allowUnfreePredicate = (pkg: builtins.elem (builtins.parseDrvName pkg.name).name [ "steam" "steam-original" "steam-run"]);
       permittedInsecurePackages = [
         "openssl-1.1.1v"
         "openssl-1.1.1w"
@@ -170,10 +183,8 @@
         element-desktop
         plexamp
         plex-media-player
-        steam
         gh
         github-desktop
-        steam-run
         lutris
         gimp
         # davinci-resolve
@@ -215,6 +226,7 @@
       wget
       busybox
       toybox
+      steam-run
       # tor
       apparmor-pam
       apparmor-parser
@@ -316,6 +328,13 @@
       gnome.gnome-weather
       gnome.eog
       pantheon.elementary-files
+      # (steam.override {
+      #   extraPkgs = pkgs: [ mono gtk3 gtk3-x11 libgdiplus zlib ];
+      #   nativeOnly = true; }).run
+      # (steam.override {
+      #   withPrimus = true; extraPkgs = pkgs: [ bumblebee glxinfo ];
+      #   nativeOnly = true; }).run
+      # (steam.override { withJava = true; })
       qemu
       (
         pkgs.writeShellScriptBin "qemu-system-x86_64-uefi" ''
@@ -377,6 +396,10 @@
   programs = {
     dconf.enable = true;
     fish.enable = true;
+    xwayland.enable = true;
+    java = {
+      enable = true;
+    };
     firejail = {
       enable = true;
       wrappedBinaries = {
@@ -503,7 +526,10 @@
       excludePackages = with pkgs; [ xterm ];
       # Enable the GNOME Desktop Environment.
       displayManager = {
-        gdm.enable = true;
+        gdm = {
+          enable = true;
+          wayland = false;
+        };
         defaultSession = "gnome";
         # autoLogin = {
         #   enable = true;
