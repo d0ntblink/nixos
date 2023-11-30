@@ -129,6 +129,8 @@
         "openssl-1.1.1v"
         "openssl-1.1.1w"
         "python-2.7.18.6"
+        "zotero-6.0.26"
+        "electron-24.8.6"
       ];
     };
   };
@@ -178,6 +180,7 @@
         qutebrowser
         notion-app-enhanced
         thunderbird
+        rustdesk
         discord
         signal-desktop
         element-desktop
@@ -235,6 +238,8 @@
       home-manager
       appimage-run
       git
+      zotero
+      # qnotero
       hplip
       pipecontrol
       rnnoise-plugin
@@ -261,7 +266,7 @@
       pipx
       groovy
       nmap
-      (python3.withPackages(ps: with ps; [requests matplotlib cryptography]))
+      (python3.withPackages(ps: with ps; [requests tqdm matplotlib cryptography]))
       # python
       # python.pkgs.pip
       vscode
