@@ -323,23 +323,23 @@
       xorg.xinit
       xorg.xinput
       xorg.xrefresh
-      gnomeExtensions.appindicator
-      gnomeExtensions.dash-to-dock
-      gnomeExtensions.openweather
-      gnomeExtensions.blur-my-shell
-      gnomeExtensions.vitals
-      gnomeExtensions.burn-my-windows
-      gnome.gnome-tweaks
-      gnome.gnome-weather
-      gnome.eog
-      pantheon.elementary-files
-      # (steam.override {
-      #   extraPkgs = pkgs: [ mono gtk3 gtk3-x11 libgdiplus zlib ];
-      #   nativeOnly = true; }).run
-      # (steam.override {
-      #   withPrimus = true; extraPkgs = pkgs: [ bumblebee glxinfo ];
-      #   nativeOnly = true; }).run
-      # (steam.override { withJava = true; })
+      # gnomeExtensions.appindicator
+      # gnomeExtensions.dash-to-dock
+      # gnomeExtensions.openweather
+      # gnomeExtensions.blur-my-shell
+      # gnomeExtensions.vitals
+      # gnomeExtensions.burn-my-windows
+      # gnome.gnome-tweaks
+      # gnome.gnome-weather
+      # gnome.eog
+      # pantheon.elementary-files
+      (steam.override {
+        extraPkgs = pkgs: [ mono gtk3 gtk3-x11 libgdiplus zlib ];
+        nativeOnly = true; }).run
+      (steam.override {
+        withPrimus = true; extraPkgs = pkgs: [ bumblebee glxinfo ];
+        nativeOnly = true; }).run
+      (steam.override { withJava = true; })
       qemu
       (
         pkgs.writeShellScriptBin "qemu-system-x86_64-uefi" ''
