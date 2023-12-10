@@ -333,6 +333,8 @@
       # gnome.gnome-weather
       # gnome.eog
       # pantheon.elementary-files
+      rpi-imager
+      etcher
       (steam.override {
         extraPkgs = pkgs: [ mono gtk3 gtk3-x11 libgdiplus zlib ];
         nativeOnly = true; }).run
