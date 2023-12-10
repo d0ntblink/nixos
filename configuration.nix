@@ -447,7 +447,7 @@
         "cjpalhdlnbpafiamejdnhcphjbkeiagm" # uBlock Origin
         "ahkbmjhfoplmfkpncgoedjgkajkehcgo" # The Great Suspender
         "pkehgijcmpdhfbdbbnkijodmdjhbjlgp" # Privacy Badger
-        "gphhapmejobijbbhgpjhcjognlahblep" # GNOME Shell integration
+        # "gphhapmejobijbbhgpjhcjognlahblep" # GNOME Shell integration
       ];
       extraOpts = {
         "BrowserSignin" = 0;
