@@ -502,7 +502,7 @@
   };
 
   ## Services
-  services = {
+    services = {
     flatpak.enable = true;
     dbus.enable = true;
     openssh.enable = true;
@@ -522,26 +522,14 @@
       enable = true;
       servers = [ "ca.pool.ntp.org" "0.ca.pool.ntp.org" "1.ca.pool.ntp.org" "2.ca.pool.ntp.org" "3.ca.pool.ntp.org" ];
     };
-    gnome = {
-      core-utilities.enable = false;
-    };
     xserver = {
       enable = true;
       autorun = true;
-      excludePackages = with pkgs; [ xterm ];
-      # Enable the GNOME Desktop Environment.
-      displayManager = {
-        gdm = {
-          enable = true;
-          wayland = false;
-        };
-        defaultSession = "gnome";
-        # autoLogin = {
-        #   enable = true;
-        #   user = "d0ntblink";
-        # };
+      desktopManager.pantheon = {
+        enable = true;
+        extraWingpanelIndicators = with pkgs; [ monitor wingpanel-indicator-ayatana];
       };
-      desktopManager.gnome.enable = true;
+      displayManager.lightdm.enable = true;
       layout = "us";
       xkbVariant = "";
       libinput = {
@@ -574,10 +562,6 @@
     };
     dbus = {
       apparmor = "enabled";
-      packages = with pkgs; [ gnome2.GConf ];
-    };
-    udev = {
-      packages = with pkgs; [ gnome.gnome-settings-daemon ];
     };
   };
 
@@ -614,8 +598,8 @@
       tctiEnvironment.enable = true;
     };
   };
-#  xdg.portal = {
-#    enable = true;
-#    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-#  };
+  xdg.portal = {
+    enable = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+  };
 }
