@@ -9,7 +9,7 @@
   imports =
     [ # Include the results of the hardware scan.
       /etc/nixos/hardware-configuration.nix
-      <home-manager/nixos> 
+      # <home-manager/nixos> 
     ];
   
   ## System Settings
@@ -20,7 +20,7 @@
       persistent = true;
       allowReboot = true;
       flags = ["--keep-going" "--upgrade-all"];
-      channel = "https://channels.nixos.org/nixos-23.05";
+      # channel = "https://channels.nixos.org/nixos-23.05";
     };
     # This value determines the NixOS release from which the default
     # settings for stateful data, like file locations and database versions
@@ -63,29 +63,14 @@
       driSupport32Bit = true;
     };
     nvidia = {
-      # Modesetting is required.
       modesetting.enable = true;
-      # Nvidia power management. Experimental, and can cause sleep/suspend to fail.
       powerManagement.enable = false;
-      # Fine-grained power management. Turns off GPU when not in use.
-      # Experimental and only works on modern Nvidia GPUs (Turing or newer).
       powerManagement.finegrained = false;
-      # Use the NVidia open source kernel module (not to be confused with the
-      # independent third-party "nouveau" open source driver).
-      # Support is limited to the Turing and later architectures. Full list of 
-      # supported GPUs is at: 
-      # https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus 
-      # Only available from driver 515.43.04+
-      # Do not disable this unless your GPU is unsupported or if you have a good reason to.
       open = false;
-      # Enable the Nvidia settings menu,
-      # accessible via `nvidia-settings`.
       nvidiaSettings = true;
-      # Optionally, you may need to select the appropriate driver version for your specific GPU.
       package = config.boot.kernelPackages.nvidiaPackages.production;
       prime = {
         sync.enable = true;
-        # Make sure to use the correct Bus ID values for your system!
         nvidiaBusId = "PCI:1:0:0";
         intelBusId = "PCI:0:2:0";
       };
@@ -124,13 +109,14 @@
     ];
     config = {
       allowUnfree = true;
-      allowUnfreePredicate = (pkg: builtins.elem (builtins.parseDrvName pkg.name).name [ "steam" "steam-original" "steam-run"]);
+      nvidia.acceptLicense = true;
       permittedInsecurePackages = [
         "openssl-1.1.1v"
         "openssl-1.1.1w"
         "python-2.7.18.6"
         "zotero-6.0.26"
         "electron-24.8.6"
+        "electron-19.1.9"
       ];
     };
   };
@@ -148,7 +134,7 @@
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
-    initrd.luks.devices."luks-34984b05-dc75-4579-97e4-a4e06e1a434c".device = "/dev/disk/by-uuid/34984b05-dc75-4579-97e4-a4e06e1a434c";
+    initrd.luks.devices."luks-b76382ad-1cdf-4dac-beb3-54c8efb94460".device = "/dev/disk/by-uuid/b76382ad-1cdf-4dac-beb3-54c8efb94460";
   };
 
   ## Network settings
@@ -159,7 +145,6 @@
     # wireless.enable = true;  # Enables wireless support via wpa_supplicant.
     networkmanager.enable = true;
   };
-
   # Set your time zone.
   time.timeZone = "America/Vancouver";
 
@@ -190,7 +175,7 @@
         github-desktop
         lutris
         gimp
-        # davinci-resolve
+        davinci-resolve
         libreoffice
         qbittorrent
         torrenttools
@@ -204,7 +189,7 @@
         protonvpn-cli_2
         bitwarden
         bitwarden-cli
-        postman
+        # postman
         telegram-desktop 
         monero-gui
         monero-cli
@@ -223,13 +208,25 @@
       "ovmf/edk2-i386-vars.fd" = {
         source = config.virtualisation.libvirtd.qemu.package + "/share/qemu/edk2-i386-vars.fd";
       };
+      "pipewire/pipewire.conf.d/default.conf".text = ''
+      context.properties = {
+        default.clock.rate = 96000
+        default.clock.quantum = 2048
+        default.clock.min-quantum = 512
+        default.clock.max-quantum = 4096
+    }
+    '';
     };
     systemPackages = with pkgs; [
-      vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+      vim
+      haskellPackages.gtk-sni-tray
+      snixembed
+      haskellPackages.status-notifier-item
+      pantheon-tweaks
+      wingpanel-indicator-ayatana
       wget
       busybox
       toybox
-      steam-run
       # tor
       apparmor-pam
       apparmor-parser
@@ -323,27 +320,39 @@
       xorg.xinit
       xorg.xinput
       xorg.xrefresh
-      # gnomeExtensions.appindicator
-      # gnomeExtensions.dash-to-dock
-      # gnomeExtensions.openweather
-      # gnomeExtensions.blur-my-shell
-      # gnomeExtensions.vitals
-      # gnomeExtensions.burn-my-windows
-      # gnome.gnome-tweaks
-      # gnome.gnome-weather
-      # gnome.eog
-      # pantheon.elementary-files
       rpi-imager
       etcher
+      wineWowPackages.stable
+      # wineWowPackages.staging
+      wine
+      winetricks
+      steam
+      steam-run
       (steam.override {
-        extraPkgs = pkgs: [ mono gtk3 gtk3-x11 libgdiplus zlib ];
-        nativeOnly = true; }).run
-      (steam.override {
-        withPrimus = true; extraPkgs = pkgs: [ bumblebee glxinfo ];
-        nativeOnly = true; }).run
-      (steam.override { withJava = true; })
-      qemu
-      (
+        # nativeOnly = true;
+        # withPrimus = true; # Enable Primus support
+        # withJava = true; # Enable Java support
+        extraPkgs = pkgs: [ 
+          mono
+          gtk3
+          gtk3-x11
+          libgdiplus
+          zlib
+          bumblebee
+          glxinfo
+          xorg.libXcursor
+          xorg.libXi
+          xorg.libXinerama
+          xorg.libXScrnSaver
+          libpng
+          libpulseaudio
+          libvorbis
+          stdenv.cc.cc.lib
+          libkrb5
+          keyutils
+        ];
+      }).run
+      qemu (
         pkgs.writeShellScriptBin "qemu-system-x86_64-uefi" ''
           qemu-system-x86_64 \
             -bios ${pkgs.OVMF.fd}/FV/OVMF.fd \
@@ -353,6 +362,8 @@
         extraPkgs = pkgs: [
           # List package dependencies here
           wineWowPackages.stable
+          # wineWowPackages.staging
+          wine
           winetricks
         ];
       })
@@ -401,9 +412,11 @@
 
   ## Program Specific Settings
   programs = {
+    gamemode.enable = true;
     dconf.enable = true;
     fish.enable = true;
     xwayland.enable = true;
+    pantheon-tweaks.enable = true;
     java = {
       enable = true;
     };
@@ -510,6 +523,13 @@
     openssh.enable = true;
     cron.enable = true;
     spice-vdagentd.enable = true;
+    gvfs = {
+      enable = true;
+      package = pkgs.gvfs;
+    };
+    gnome = {
+      gnome-keyring.enable = true;
+    };
     spice-webdavd = {
       enable = true;
       package = pkgs.phodav;
@@ -529,7 +549,7 @@
       autorun = true;
       desktopManager.pantheon = {
         enable = true;
-        extraWingpanelIndicators = with pkgs; [ monitor wingpanel-indicator-ayatana];
+        extraWingpanelIndicators = with pkgs; [ wingpanel-indicator-ayatana monitor ];
       };
       displayManager.lightdm.enable = true;
       layout = "us";
@@ -580,6 +600,18 @@
           echo Y > /sys/module/usbcore/parameters/old_scheme_first
           echo Y > /sys/module/usbcore/parameters/use_both_schemes
         '';
+      };
+    };
+    user = {
+      services = {
+        indicatorapp = {
+          description = "indicator-application-gtk3";
+          wantedBy = [ "graphical-session.target" ];
+          partOf = [ "graphical-session.target" ];
+          serviceConfig = {
+            ExecStart = "${pkgs.indicator-application-gtk3}/libexec/indicator-application/indicator-application-service";
+          };
+        };
       };
     };
   };
