@@ -194,6 +194,43 @@
         monero-gui
         monero-cli
         xmrig
+        heroic
+        prismlauncher
+        steam
+        steam-run
+        (steam.override {
+          # nativeOnly = true;
+          # withPrimus = true; # Enable Primus support
+          # withJava = true; # Enable Java support
+          extraPkgs = pkgs: [ 
+            mono
+            gtk3
+            gtk3-x11
+            libgdiplus
+            zlib
+            bumblebee
+            glxinfo
+            xorg.libXcursor
+            xorg.libXi
+            xorg.libXinerama
+            xorg.libXScrnSaver
+            libpng
+            libpulseaudio
+            libvorbis
+            stdenv.cc.cc.lib
+            libkrb5
+            keyutils
+          ];
+        }).run
+        (lutris.override {
+          extraPkgs = pkgs: [
+            # List package dependencies here
+            wineWowPackages.stable
+            # wineWowPackages.staging
+            wine
+            winetricks
+          ];
+        })
       ];
     };
   };
@@ -211,7 +248,7 @@
       "pipewire/pipewire.conf.d/default.conf".text = ''
       context.properties = {
         default.clock.rate = 96000
-        default.clock.quantum = 2048
+        default.clock.quantum = 2048  
         default.clock.min-quantum = 512
         default.clock.max-quantum = 4096
     }
@@ -219,6 +256,7 @@
     };
     systemPackages = with pkgs; [
       vim
+      glibc
       haskellPackages.gtk-sni-tray
       snixembed
       haskellPackages.status-notifier-item
@@ -326,47 +364,12 @@
       # wineWowPackages.staging
       wine
       winetricks
-      steam
-      steam-run
-      (steam.override {
-        # nativeOnly = true;
-        # withPrimus = true; # Enable Primus support
-        # withJava = true; # Enable Java support
-        extraPkgs = pkgs: [ 
-          mono
-          gtk3
-          gtk3-x11
-          libgdiplus
-          zlib
-          bumblebee
-          glxinfo
-          xorg.libXcursor
-          xorg.libXi
-          xorg.libXinerama
-          xorg.libXScrnSaver
-          libpng
-          libpulseaudio
-          libvorbis
-          stdenv.cc.cc.lib
-          libkrb5
-          keyutils
-        ];
-      }).run
       qemu (
         pkgs.writeShellScriptBin "qemu-system-x86_64-uefi" ''
           qemu-system-x86_64 \
             -bios ${pkgs.OVMF.fd}/FV/OVMF.fd \
             "$@" ''
       )
-      (lutris.override {
-        extraPkgs = pkgs: [
-          # List package dependencies here
-          wineWowPackages.stable
-          # wineWowPackages.staging
-          wine
-          winetricks
-        ];
-      })
     ];
     variables = { 
       EDITOR = "code";
@@ -377,7 +380,6 @@
       TERMINAL = "wezterm";
       TERM_PROGRAM = "wezterm";
       TERM = "wezterm";
-      
     };
   };
 
@@ -549,7 +551,7 @@
       autorun = true;
       desktopManager.pantheon = {
         enable = true;
-        extraWingpanelIndicators = with pkgs; [ wingpanel-indicator-ayatana monitor ];
+        extraWingpanelIndicators = with pkgs; [ wingpanel-indicator-ayatana ];
       };
       displayManager.lightdm.enable = true;
       layout = "us";
