@@ -9,7 +9,7 @@
   imports =
     [ # Include the results of the hardware scan.
       /etc/nixos/hardware-configuration.nix
-      # <home-manager/nixos> 
+      <home-manager/nixos>
     ];
   
   ## System Settings
@@ -160,6 +160,8 @@
       description = "d0ntblink";
       extraGroups = [ "wheel" "kvm" "input" "disk" "libvirtd" "vboxusers" "tss"];
       packages = with pkgs; [
+        yt-dlp
+        youtube-tui
         librewolf
         microsoft-edge-dev
         qutebrowser
@@ -187,6 +189,7 @@
         protonvpn-gui
         protonmail-bridge
         protonvpn-cli_2
+        protonvpn-cli
         bitwarden
         bitwarden-cli
         # postman
@@ -302,6 +305,7 @@
       groovy
       nmap
       (python3.withPackages(ps: with ps; [requests tqdm matplotlib cryptography]))
+      virtualenv
       # python
       # python.pkgs.pip
       vscode
@@ -358,6 +362,7 @@
       xorg.xinit
       xorg.xinput
       xorg.xrefresh
+      autorandr
       rpi-imager
       etcher
       wineWowPackages.stable
