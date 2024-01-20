@@ -158,7 +158,7 @@
       isNormalUser = true;
       home = "/home/d0ntblink";
       description = "d0ntblink";
-      extraGroups = [ "wheel" "kvm" "input" "disk" "libvirtd" "vboxusers" "tss"];
+      extraGroups = [ "wheel" "kvm" "input" "disk" "libvirtd" "vboxusers" "tss" "networkmanager"];
       packages = with pkgs; [
         yt-dlp
         youtube-tui
@@ -177,7 +177,7 @@
         github-desktop
         lutris
         gimp
-        davinci-resolve
+        # davinci-resolve
         libreoffice
         qbittorrent
         torrenttools
@@ -185,11 +185,13 @@
         onedrive
         vscode
         tailscale
+        trayscale
+        tailscale-systray
         ansible
-        protonvpn-gui
         protonmail-bridge
         protonvpn-cli_2
-        protonvpn-cli
+        # protonvpn-gui
+        # protonvpn-cli
         bitwarden
         bitwarden-cli
         # postman
@@ -530,6 +532,13 @@
     openssh.enable = true;
     cron.enable = true;
     spice-vdagentd.enable = true;
+    hardware = {
+      bolt.enable = true;
+    };
+    tailscale = {
+      enable  = true;
+      package = pkgs.tailscale;
+    };
     gvfs = {
       enable = true;
       package = pkgs.gvfs;
@@ -617,7 +626,33 @@
           partOf = [ "graphical-session.target" ];
           serviceConfig = {
             ExecStart = "${pkgs.indicator-application-gtk3}/libexec/indicator-application/indicator-application-service";
+            restart = "always";
           };
+        };
+        # protonmail-bridge = {
+        #   description = "protonmail-bridge";
+        #   wantedBy = [ "graphical-session.target" ];
+        #   serviceConfig = {
+        #     ExecStart = "screen -S d0ntblink -dm protonmail-bridge --cli";
+        #     User = "d0ntblink";
+        #     # restart = "always";
+        #   };
+        #   after = [ "indicatorapp.service" ];
+        #   partOf = [ "graphical-session.target" ];
+        # };
+        flameshot = {
+          description = "flameshot";
+          wantedBy = [ "graphical-session.target" ];
+          after = [ "indicatorapp.service" ];
+          partOf = [ "graphical-session.target" ];
+          script = "${pkgs.flameshot}/bin/flameshot";
+        };
+        kdeconnect-indicator = {
+          description = "kdeconnect-indicator";
+          wantedBy = [ "graphical-session.target" ];
+          after = [ "indicatorapp.service" ];
+          partOf = [ "graphical-session.target" ];
+          script = "${pkgs.plasma5Packages.kdeconnect-kde}/bin/kdeconnect-indicator";
         };
       };
     };
