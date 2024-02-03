@@ -158,7 +158,7 @@
       isNormalUser = true;
       home = "/home/d0ntblink";
       description = "d0ntblink";
-      extraGroups = [ "wheel" "kvm" "input" "disk" "libvirtd" "vboxusers" "tss" "networkmanager"];
+      extraGroups = [ "wheel" "kvm" "input" "disk" "libvirtd" "vboxusers" "tss" "networkmanager" "docker"];
       packages = with pkgs; [
         yt-dlp
         youtube-tui
@@ -394,7 +394,7 @@
   fonts = {
     fontDir.enable = true;
     enableGhostscriptFonts = true;
-    fonts = with pkgs; [
+    packages = with pkgs; [
       noto-fonts
       noto-fonts-emoji
       nerdfonts
