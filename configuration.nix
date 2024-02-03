@@ -18,7 +18,12 @@
     autoUpgrade = {
       enable = true;
       persistent = true;
-      allowReboot = true;
+      operation = "switch";
+      allowReboot = false;
+      rebootWindow = {
+        lower = "04:00";
+        upper = "05:00";
+      };
       flags = ["--keep-going" "--upgrade-all"];
       # channel = "https://channels.nixos.org/nixos-23.05";
     };
