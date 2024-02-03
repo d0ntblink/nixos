@@ -396,7 +396,14 @@
     enableGhostscriptFonts = true;
     packages = with pkgs; [
       noto-fonts
+      noto-fonts-cjk
       noto-fonts-emoji
+      liberation_ttf
+      fira-code
+      fira-code-symbols
+      mplus-outline-fonts.githubRelease
+      dina-font
+      proggyfonts
       nerdfonts
       corefonts
       google-fonts
@@ -405,7 +412,7 @@
       enable = true;
       defaultFonts = {
         emoji = ["Noto Color Emoji"];
-        monospace = ["FiraMono Nerd Font"];
+        monospace = ["FiraCode Nerd Font Mono"];
         sansSerif = ["FiraCode Nerd Font"];
         serif = ["FiraCode Nerd Font"];
       };
