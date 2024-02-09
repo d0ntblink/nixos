@@ -114,6 +114,8 @@
     ];
     config = {
       allowUnfree = true;
+      cudaSupport = true;
+      cudnnSupport = true;
       nvidia.acceptLicense = true;
       permittedInsecurePackages = [
         "openssl-1.1.1v"
@@ -265,6 +267,11 @@
     '';
     };
     systemPackages = with pkgs; [
+      gnumake
+      # cope never use, breaks PATH, might be a way to fix it will look into it later
+      nvtop
+      glxinfo
+      unigine-valley
       vim
       glibc
       haskellPackages.gtk-sni-tray
@@ -304,6 +311,9 @@
       zathura
       nettools
       docker
+      podman
+      docker-compose
+      podman-compose
       tshark
       wireshark
       ruby
@@ -514,8 +524,30 @@
 
   ## Virtualization and Containerzation
   virtualisation = {
-    docker.enable = true;
-    podman.enable = false;
+    docker = {
+      enable = true;
+      enableOnBoot = true;
+      enableNvidia = true;
+      extraPackages = with pkgs; [
+        nvidia-docker
+      ];
+      autoPrune = {
+        enable = true;
+        flags = ["--all"];
+      };
+    };
+    podman = {
+      enable = false;
+      enableNvidia = true;
+      dockerCompat = false;
+      extraPackages = with pkgs; [
+        nvidia-podman
+      ];
+      autoPrune = {
+        enable = true;
+        flags = ["--all"];
+      };
+    };
     waydroid.enable = true;
     spiceUSBRedirection.enable = true;
     libvirtd = {
@@ -617,6 +649,7 @@
 
   ## Systemd
   systemd = {
+    enableUnifiedCgroupHierarchy = false;
     services = {
       tune-usb-autosuspend = {
         description = "Disable USB autosuspend";
