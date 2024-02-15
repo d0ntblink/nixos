@@ -167,6 +167,7 @@
       description = "d0ntblink";
       extraGroups = [ "wheel" "kvm" "input" "disk" "libvirtd" "vboxusers" "tss" "networkmanager" "docker"];
       packages = with pkgs; [
+        masterpdfeditor4
         yt-dlp
         youtube-tui
         librewolf
