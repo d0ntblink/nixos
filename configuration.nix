@@ -124,6 +124,7 @@
         "zotero-6.0.26"
         "electron-24.8.6"
         "electron-19.1.9"
+        "adobe-reader-9.5.5"
       ];
     };
   };
@@ -167,6 +168,9 @@
       description = "d0ntblink";
       extraGroups = [ "wheel" "kvm" "input" "disk" "libvirtd" "vboxusers" "tss" "networkmanager" "docker"];
       packages = with pkgs; [
+        obs-studio
+        obs-cli
+        adobe-reader
         masterpdfeditor4
         yt-dlp
         youtube-tui
@@ -176,7 +180,9 @@
         notion-app-enhanced
         thunderbird
         rustdesk
-        discord
+        # discord
+        discord-ptb
+        discordo
         signal-desktop
         element-desktop
         plexamp
