@@ -152,6 +152,10 @@
     hostName = "w1ngz"; # Define your hostname.
     # wireless.enable = true;  # Enables wireless support via wpa_supplicant.
     networkmanager.enable = true;
+    hosts = {
+      "127.0.0.1" = ["localhost"];
+      "127.0.0.2" = ["w1ngz" "w1ngz.local" "w1ngz.localdomain"];
+    };
   };
   # Set your time zone.
   time.timeZone = "America/Vancouver";
@@ -350,7 +354,7 @@
       burpsuite
       win-virtio
       win-spice
-      virtualbox
+      # virtualbox
       swtpm
       libverto
       libguestfs
@@ -568,12 +572,12 @@
         ovmf.packages = [ pkgs.OVMFFull.fd ];
       };
     };
-    virtualbox = {
-      host = {
-        enable = true;
-        enableExtensionPack = true;
-      };
-    };
+    # virtualbox = {
+    #   host = {
+    #     enable = true;
+    #     enableExtensionPack = true;
+    #   };
+    # };
   };
 
   ## Services
