@@ -117,6 +117,11 @@
       cudaSupport = true;
       cudnnSupport = true;
       nvidia.acceptLicense = true;
+      packageOverrides = pkgs: {
+        unstable = import <unstable> {
+          config = config.nixpkgs.config;
+        };
+      };
       permittedInsecurePackages = [
         "openssl-1.1.1v"
         "openssl-1.1.1w"
@@ -142,6 +147,7 @@
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
+
     initrd.luks.devices."luks-b76382ad-1cdf-4dac-beb3-54c8efb94460".device = "/dev/disk/by-uuid/b76382ad-1cdf-4dac-beb3-54c8efb94460";
   };
 
@@ -158,7 +164,7 @@
     };
   };
   # Set your time zone.
-  time.timeZone = "America/Vancouver";
+  time.timeZone = "America/Edmonton";
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_CA.UTF-8";
@@ -173,13 +179,13 @@
       extraGroups = [ "wheel" "kvm" "input" "disk" "libvirtd" "vboxusers" "tss" "networkmanager" "docker"];
       packages = with pkgs; [
         obs-studio
-        obs-cli
+        obs-cli 
         adobe-reader
         masterpdfeditor4
         yt-dlp
         youtube-tui
-        librewolf
-        microsoft-edge-dev
+        unstable.librewolf
+        brave
         qutebrowser
         notion-app-enhanced
         thunderbird
@@ -187,7 +193,7 @@
         # discord
         discord-ptb
         discordo
-        signal-desktop
+        unstable.signal-desktop
         element-desktop
         plexamp
         plex-media-player
@@ -195,24 +201,22 @@
         github-desktop
         lutris
         gimp
-        # davinci-resolve
+        unstable.davinci-resolve
         libreoffice
         qbittorrent
         torrenttools
         chromium
         onedrive
-        vscode
+        unstable.vscode
         tailscale
         trayscale
         tailscale-systray
         ansible
         protonmail-bridge
-        protonvpn-cli_2
-        # protonvpn-gui
-        # protonvpn-cli
+        unstable.protonvpn-gui
         bitwarden
         bitwarden-cli
-        # postman
+        unstable.postman
         telegram-desktop 
         monero-gui
         monero-cli
@@ -332,7 +336,7 @@
       pipx
       groovy
       nmap
-      (python3.withPackages(ps: with ps; [requests tqdm matplotlib cryptography]))
+      python3
       virtualenv
       # python
       # python.pkgs.pip
@@ -355,6 +359,7 @@
       win-virtio
       win-spice
       # virtualbox
+      # vmware-workstation
       swtpm
       libverto
       libguestfs
