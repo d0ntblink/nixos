@@ -176,8 +176,10 @@
       isNormalUser = true;
       home = "/home/d0ntblink";
       description = "d0ntblink";
-      extraGroups = [ "wheel" "kvm" "input" "disk" "libvirtd" "vboxusers" "tss" "networkmanager" "docker"];
+      extraGroups = [ "wheel" "kvm" "input" "disk" "libvirtd" "vboxusers" "tss" "networkmanager" "docker" "plugdev"];
       packages = with pkgs; [
+        unstable.bambu-studio
+        android-tools
         obs-studio
         obs-cli 
         adobe-reader
@@ -185,12 +187,11 @@
         yt-dlp
         youtube-tui
         unstable.librewolf
-        brave
+        unstable.brave
         qutebrowser
         notion-app-enhanced
         thunderbird
         rustdesk
-        # discord
         discord-ptb
         discordo
         unstable.signal-desktop
@@ -205,7 +206,7 @@
         libreoffice
         qbittorrent
         torrenttools
-        chromium
+        unstable.chromium
         onedrive
         unstable.vscode
         tailscale
